@@ -1,0 +1,4 @@
+- include_tasks: common.yml
+- include_tasks: security.yml
+- include_tasks: volume.yml
+- include_tasks: instance.yml

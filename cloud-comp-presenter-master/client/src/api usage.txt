@@ -1,0 +1,29 @@
+this.state = {
+    data = {}
+
+  }
+
+  onComponentMount(){
+    getAllDocuments()
+  }
+
+  getAllDocuments(){
+
+    var selfref = this;
+
+    const errorCallBack = (error) => {
+      console.log(JSON.stringify(error));
+    }
+
+    const successCallBack = function(response) {
+        console.log(response)
+        selfref.setState({
+          data : response.data
+        })
+    }
+
+    allDocsGET(successCallBack,errorCallBack,{})
+
+  }
+
+  remember to: import {allDocsGET} from "../api.js"

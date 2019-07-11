@@ -1,0 +1,50 @@
+# Initialise Infrastructure
+- hosts: localhost
+  vars_files:
+    - host_vars/cloud.yml
+  gather_facts: true
+  roles:
+    - role: setup
+
+# Waits for servers to be ready for configuration
+- hosts: web, db, back
+  vars_files:
+    - host_vars/cloud.yml
+  gather_facts: false
+  become: true
+  roles:    
+    - role: pre-configure
+
+# Configure Servers using in-memory Inventory
+- hosts: web, db, back
+  vars_files:
+    - host_vars/cloud.yml
+  gather_facts: true
+  become: true
+  roles:    
+    - role: configure
+    
+# Configure Database
+- hosts: db
+  vars_files:
+    - host_vars/cloud.yml
+  gather_facts: true
+  become: true
+  roles:    
+    - role: db-init
+
+# Deply harvesters
+- hosts: back
+  vars_files:
+    - host_vars/cloud.yml
+  gather_facts: true  
+  roles:    
+    - role: back-init
+
+# Deply front end
+- hosts: web
+  vars_files:
+    - host_vars/cloud.yml
+  gather_facts: true  
+  roles:    
+    - role: web-init

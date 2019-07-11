@@ -1,0 +1,22 @@
+{
+  "_id": "_design/city_views",
+  "views": {
+    "greed_by_city": {
+      "reduce": "function (keys, values, rereduce) {\r\n  results = {'sum':0, 'count':0, 'average':0};\r\n  if (rereduce) {\r\n    for (var i = 0; i < values.length; i++) {\r\n      results.sum += values[i].sum;\r\n      results.count += values[i].count;\r\n    }\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  } else {\r\n    for (var j = 0; j < values.length; j++) {\r\n      results.sum += values[j];\r\n    }\r\n    results.count = values.length;\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  }\r\n}",
+      "map": "function(doc) {\r\n    if(Object.keys(doc.greed_map).length !== 0){\r\n        emit(doc.city,doc.greed_score);\r\n    }\r\n}"
+    },
+    "month_city_view": {
+      "reduce": "function (keys, values, rereduce) {\r\n  results = {'sum':0, 'count':0, 'average':0};\r\n  if (rereduce) {\r\n    for (var i = 0; i < values.length; i++) {\r\n      results.sum += values[i].sum;\r\n      results.count += values[i].count;\r\n    }\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  } else {\r\n    for (var j = 0; j < values.length; j++) {\r\n      results.sum += values[j];\r\n    }\r\n    results.count = values.length;\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  }\r\n}",
+      "map": "function (doc) {\r\n   if(Object.keys(doc.greed_map).length !== 0){\r\n      var doc_date = doc.date\r\n      var b = doc_date.split(/[: ]/g);\r\n      var m = {jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6,\r\n               aug:7, sep:8, oct:9, nov:10, dec:11};\r\n    \r\n      var date = new Date(Date.UTC(b[7], m[b[1].toLowerCase()], b[2], b[3], b[4], b[5]));\r\n      date.setHours(15,0,0,0)\r\n      date.setDate(1)\r\n      emit([doc.city,date], doc.greed_score);\r\n   }\r\n}"
+    },
+    "yearly_city_view": {
+      "reduce": "function (keys, values, rereduce) {\r\n  results = {'sum':0, 'count':0, 'average':0};\r\n  if (rereduce) {\r\n    for (var i = 0; i < values.length; i++) {\r\n      results.sum += values[i].sum;\r\n      results.count += values[i].count;\r\n    }\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  } else {\r\n    for (var j = 0; j < values.length; j++) {\r\n      results.sum += values[j];\r\n    }\r\n    results.count = values.length;\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  }\r\n}",
+      "map": "function (doc) {\r\n  if(Object.keys(doc.greed_map).length !== 0){\r\n    var date = doc.date.split(\" \");\r\n    emit([date[5],doc.city], doc.greed_score);\r\n  }\r\n}"
+    },
+    "tweet_by_city": {
+      "reduce": "function (keys, values, rereduce) {\r\n  results = {'sum':0, 'count':0, 'average':0};\r\n  if (rereduce) {\r\n    for (var i = 0; i < values.length; i++) {\r\n      results.sum += values[i].sum;\r\n      results.count += values[i].count;\r\n    }\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  } else {\r\n    for (var j = 0; j < values.length; j++) {\r\n      results.sum += values[j];\r\n    }\r\n    results.count = values.length;\r\n    results.average = results.sum/results.count;\r\n    return results;\r\n  }\r\n}",
+      "map": "function(doc) {\n    emit(doc.city,doc.greed_score);\n}"
+    }
+  },
+  "language": "javascript"
+}

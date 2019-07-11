@@ -1,0 +1,105 @@
+ # Zones
+availability_zone: melbourne-qh2-uom
+
+# Key
+ansible_ssh_private_key_file: 'cloud.key'
+ansible_host_key_checking: false
+
+# Database credentials
+db_user: user
+db_pass: pass
+
+# Instance OS Image
+img: afccf48a-9426-4618-86dc-0ceb636f0169
+
+# Path to store apps
+app_path: '/data/app'
+harv_path: '{{app_path}}/cloud-comp-harvester'
+pres_path: '{{app_path}}/cloud-comp-presenter'
+
+
+# Volumes
+volumes:
+  - vol_name: backVol
+    vol_size: 5
+  - vol_name: webVol
+    vol_size: 5
+  - vol_name: dbVol
+    vol_size: 240
+
+
+# Security Groups
+security_groups:
+  - name: ssh
+    description: "Allows access to VM through secure shell"
+  - name: http
+    description: "Adds access to webpages"
+  - name: app
+    description: "Allows access to ports needed by application running on servers"
+  - name: internal
+    description: "Allow access to servers internally within the cloud"
+# Rules of security groups
+
+security_groups_rules:
+  - name: ssh
+    protocol: tcp
+    port_range_min: 22
+    port_range_max: 22
+    remote_ip_prefix: 0.0.0.0/0
+  - name: http    
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0  
+  - name: app    
+    protocol: tcp
+    port_range_min: 3000
+    port_range_max: 3000
+    remote_ip_prefix: 0.0.0.0/0
+  - name: app    
+    protocol: tcp
+    port_range_min: 5000
+    port_range_max: 5000
+    remote_ip_prefix: 0.0.0.0/0
+  - name: app
+    protocol: tcp
+    port_range_min: 5984
+    port_range_max: 5984
+    remote_ip_prefix: 0.0.0.0/0 
+  - name: internal
+    protocol: tcp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_group: internal
+    remote_ip_prefix: 0.0.0.0/0 
+  - name: internal
+    protocol: udp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_group: internal
+    remote_ip_prefix: 0.0.0.0/0 
+  - name: internal
+    protocol: icmp
+    port_range_min: 0
+    port_range_max: 255
+    remote_group: internal
+    remote_ip_prefix: 0.0.0.0/0 
+
+
+# Instances
+instances:
+  - name: back
+    image: '{{img}}'
+    key_name: aymen-mac
+    flavor: uom.mse.2c9g
+    volume: backVol
+  - name: db
+    image: '{{img}}'
+    key_name: aymen-mac
+    flavor: uom.mse.2c9g
+    volume: dbVol
+  - name: web
+    image: '{{img}}'
+    key_name: aymen-mac
+    flavor: uom.mse.2c9g
+    volume: webVol

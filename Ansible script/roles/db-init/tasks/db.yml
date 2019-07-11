@@ -1,0 +1,26 @@
+---
+- name: Copy city_views.json
+  copy:
+    src: ../scripts/city_views.json
+    dest: /home/ubuntu/city_views.json
+    owner: ubuntu    
+    mode: 0755
+
+- name: Copy general_views.json
+  copy:
+    src: ../scripts/general_views.json
+    dest: /home/ubuntu/general_views.json
+    owner: ubuntu    
+    mode: 0755
+
+- name: Create Tweet Store Database
+  command: 'curl -X PUT http://{{db_user}}:{{db_pass}}@{{ansible_default_ipv4.address}}:5984/tweet_store'  
+  become: yes
+
+- name: Copy City View script to DB
+  command: 'curl -X PUT http://{{db_user}}:{{db_pass}}@{{ansible_default_ipv4.address}}:5984/tweet_store/_design/city_views -d @city_views.json'  
+  become: yes
+
+- name: Copy General Views script to DB
+  command: 'curl -X PUT http://{{db_user}}:{{db_pass}}@{{ansible_default_ipv4.address}}:5984/tweet_store/_design/general_views -d @general_views.json'  
+  become: yes

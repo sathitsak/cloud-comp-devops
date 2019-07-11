@@ -1,0 +1,32 @@
+- name: Install NodeJS  
+  become: true
+  apt:
+    name: ['nodejs']
+    state: latest
+
+- name: Install npm
+  become: true
+  apt:
+    name: ['npm']
+    state: latest
+
+- name: Install API Gateway dependencies
+  become: true
+  command: 'npm install'
+  args:
+    chdir: '{{pres_path}}'
+
+- name: Install Web Dependencies
+  become: true
+  command: 'npm install'
+  args:
+    chdir: '{{pres_path}}/client'
+
+- name: Install Process Monitoring for Node JS
+  become: true
+  command: 'npm install pm2 -g'
+  args:
+    chdir: '{{pres_path}}'
+
+
+

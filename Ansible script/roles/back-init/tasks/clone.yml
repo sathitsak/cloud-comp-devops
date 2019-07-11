@@ -1,0 +1,28 @@
+- name: Copy config file
+  copy:
+    src: ../files/config
+    dest: /home/ubuntu/.ssh/config
+    owner: ubuntu    
+    mode: 0755
+
+- name: Copy key file
+  copy:
+    src: ../../../deploy.key
+    dest: /home/ubuntu/deploy.key
+    owner: ubuntu    
+    mode: 0600
+
+- name: Create App folder
+  become: true
+  file:
+    path: /data/app
+    state: directory
+    mode: 0755
+    owner: ubuntu
+
+- name: Git Clone Harvester  
+  git:
+    repo: 'git@github.com:MMCore/cloud-comp-harvester.git'
+    dest: '{{harv_path}}'
+    accept_hostkey: yes        
+    version: 'harvester-release-4'

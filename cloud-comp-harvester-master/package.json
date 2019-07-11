@@ -1,0 +1,19 @@
+{
+  "name": "assignment-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "big-integer": "^1.6.43",
+    "dotenv": "^8.0.0",
+    "natural": "^0.6.3",
+    "node-couchdb": "^1.3.0",
+    "pm2": "^3.5.0",
+    "twit": "^2.2.11"
+  }
+}

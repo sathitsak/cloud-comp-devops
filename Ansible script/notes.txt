@@ -1,0 +1,51 @@
+Problems encountered
+
+1. There was no given example of how to use ansible with openstack nectar, which added problems due to lack of documentation on how to use it. Other problems was also related to configurating the host machine to work with ansible and openstack which made it hard to identify if the problem was in the script or the host machine.
+
+2. Due to lack of IP addresses, using ssh was only accessible when being inside the Uni's premises or by using a vpn. This meant adding more configurations to the servers that would have not been required if Unimelb cloud had public IPs to offer.
+
+3. The ansible script does not contain in advance any hosts that needs to be configured as they don't exist at first. But once the script is run once and instances are created, the inventory needed to be updated manually. This was solved by using dynamic inventory in ansible.
+
+4. Unimelb / Nectar cloud is very unreliable. The team had to change the script several time due to sudden changes in the availability in server flavors. Example would be the disappearance of uom.general.2c8g (2 vCPU with 8Gb Ram), where most of the flavors suddenly disappeared and only two were available (uom.mse.1c, and uom.mse.2c)
+
+5. Using git became a big source of problem. Although we were able to set it up for github and run git clone command on our servers, the git module from ansible ignored the configuration file. After a lot of search, we couldn't reach an answer. We found a work around by deploying a script file that contains the command and we run it on the server to bypass this problem
+
+
+
+Architecute:
+4 servers
+1 backend (harvester) with 1 (or 2?) containers
+1 Loadbalancer with 1 container
+1 DB with 2 containers forming a CouchDB cluster
+1 Webserver that contains 
+
+
+Problems with architecutre:
+This architecure is due to having limited resources. Problems in the current architecure:
+1. Single Point of Failure for all services (backend, db, webserver and load balancer)
+2. Clustering in one VM
+3. Webserver contains a backend component in it, which works as intermediate between
+front end and DB
+4. Only one load balancer exists
+
+Further improvements:
+Considering there is enough resources, the following architecture is suggested
+1. Backend for each service (2 harvesters and one for fetching info)
+2. Backend instances' duplication
+3. Couch DB Cluster in several VMs
+4. Including at least two load balancer
+5. One Server for operations (reporting, status, logging... etc)
+
+
+Continuous Integration:
+GitLab CI was used with GitFlow as a git strategy. The strategy is as follows:
+[mention the strateg]
+[mention the steps involved from development to push to feature branch to pull request to building through GitLab CI]
+
+
+DevOps techniques:
+1. Ansible for creating infrastructure.
+2. A script that can easily upscale and downscale on need
+3. Using of containerising techniuqes through docker and docker-compose
+4. (optional) Documenting API through Swagger
+5. (optional) Monitoring through ???

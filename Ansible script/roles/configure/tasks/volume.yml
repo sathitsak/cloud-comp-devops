@@ -1,0 +1,22 @@
+# Format Volume as ext4 
+- name: Format Volume on /dev/vdb
+  filesystem:
+    fstype: ext4
+    dev: /dev/vdb
+
+# Create Folder for data
+- name: Create Data Folder
+  file:    
+    path: /data
+    state: directory
+    mode: 0775
+
+# Mount Volumes to instances
+- name: Mount Volume
+  mount:    
+    path: /data
+    src: /dev/vdb
+    fstype: ext4
+    state: mounted
+
+# Persists Volume even after restart

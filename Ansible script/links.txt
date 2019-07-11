@@ -1,0 +1,7 @@
+:3000/
+:5000/api
+:5000/api/tweet_data/tweets_by_city
+:5000/api/tweet_data/greed_city_years_months
+:5000/api/tweet_data/greedy_keywords_count
+:5000/api/tweet_data/greed_city_years_months
+:5000/api/aurin_gambling_data

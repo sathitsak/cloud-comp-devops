@@ -1,0 +1,18 @@
+---
+- name: Copy docker-compose file
+  copy:
+    src: ../scripts/docker-compose.yml
+    dest: /home/ubuntu/docker-compose.yml
+    owner: ubuntu    
+    mode: 0755
+
+- name: Copy Script file
+  copy:
+    src: ../scripts/cluster-setup.sh
+    dest: /home/ubuntu/cluster-setup.sh
+    owner: ubuntu    
+    mode: 0755
+
+- name: Run Cluster Setup Script
+  command: './cluster-setup.sh'  
+  become: yes

@@ -1,0 +1,8 @@
+
+# pip install openstacksdk
+- name: Install OpenStack SDK
+  become: yes  
+  pip:
+    name: ['openstacksdk']
+    state: latest
+

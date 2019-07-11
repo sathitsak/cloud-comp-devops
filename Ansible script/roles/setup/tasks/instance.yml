@@ -1,0 +1,24 @@
+- name: Create Compute Instances
+  os_server:
+    name: '{{ item.name }}'
+    image: '{{ item.image }}'
+    key_name: '{{ item.key_name }}'
+    flavor: '{{ item.flavor }}'
+    availability_zone: '{{ availability_zone }}'
+    security_groups: '{{ sg_names }}'
+    network: 'qh2-uom-internal'
+    volumes: '{{ item.volume }}'
+    auto_floating_ip: yes
+    wait: yes
+    timeout: 600
+    state: present
+  loop: '{{ instances }}'
+  register: inst 
+
+# Add created Instances to in-memory Inventory
+- name: Update In-Memory Inventory
+  add_host:
+    name: "{{ item.invocation.module_args.name }}"    
+    ansible_ssh_host: "{{ item.openstack.accessIPv4 }}"
+    ansible_ssh_user: 'ubuntu'    
+  loop: '{{ inst.results}}'

@@ -1,0 +1,4 @@
+/nocloud
+.DS_Store
+/venv
+*.retry

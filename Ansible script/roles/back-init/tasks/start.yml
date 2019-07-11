@@ -1,0 +1,30 @@
+# Save DB server ip for further configurations
+- set_fact: db_ip='{{hostvars['db'].ansible_ssh_host}}'
+
+- name: Show Database server IP
+  debug:
+    var: db_ip
+
+- name: Set Connection to DB
+  become: true
+  lineinfile:
+    path: '{{harv_path}}/.env'
+    regexp: '^COUD_DB_HOST'
+    line: 'COUD_DB_HOST={{ db_ip }}'
+
+- name: Setup PM2 to start on boot  
+  become: true
+  command: 'env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu --hp /home/ubuntu'
+
+- name: Starting Harvester for all cities  
+  command: 'pm2 start Harversters/twitter_streamer.js --watch --name "{{item}}" -- "{{item}}"'
+  args:
+    chdir: '{{harv_path}}'
+  with_items:
+    - Melbourne
+    - Sydney
+    - Brisbane
+    - Adelaide
+
+- name: Freeze Cities list as part of service boot    
+  command: 'pm2 save'

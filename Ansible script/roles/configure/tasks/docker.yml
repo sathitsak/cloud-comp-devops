@@ -1,0 +1,66 @@
+- name: Download get-docker.sh
+  command: curl -fsSL https://get.docker.com -o get-docker.sh
+
+- name: Run get-docker.sh
+  command: sh get-docker.sh
+
+- name: Create a systemd drop-in directory for the docker service
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: 0755
+
+- name: Create http-proxy.conf and add '[Service]'
+  lineinfile:
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    line: '[Service]'
+    create: yes
+
+- name: Add 'Environment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000"' 
+  lineinfile:
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    insertafter: EOF
+    line: 'Environment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000"'
+    create: yes
+
+- name: Create https-proxy.conf and add '[Service]'
+  lineinfile:
+    path: /etc/systemd/system/docker.service.d/https-proxy.conf
+    line: '[Service]'
+    create: yes
+
+- name: Add 'Environment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000"' 
+  lineinfile:
+    path: /etc/systemd/system/docker.service.d/https-proxy.conf
+    insertafter: EOF
+    line: 'Environment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000"'
+    create: yes
+
+- name: Flush change If this crash blame sudo
+  command: systemctl daemon-reload
+
+- name: Restart docker to apply change
+  command: systemctl restart docker
+
+# sudo groupadd docker
+- name: Create "docker" group
+  group:
+    name: "dockerg"
+    state: present
+  tags:
+    - docker
+ 
+# sudo usermod -aG docker ubuntu
+- name: Add remote "ubuntu" user to "docker" group
+  user:
+    name: "ubuntu"
+    group: "docker"
+    append: yes
+  tags:
+    - docker
+
+- name: Install Docker Compose
+  apt:
+    name: docker-compose
+    state: present
+    update_cache: yes
